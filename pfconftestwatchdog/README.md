@@ -4,7 +4,7 @@ Testing [pf(4)](https://man.openbsd.org/pf) configuration changes on remote serv
 
 This mechanism implements a watchdog which allows testing the changes and unless the ok is given by the remote admin will revert to a working configuration.
 
-Note: This is very specific to [OpenBSD](https://openbsd.org). Porting this to another platform should only be attempted if [pf(4)](https://man.openbsd.org/pf) is used on that platform. The basic concepts might work with other local firewalls though. Also remember that the default shell on [OpenBSD](https://openbsd.org) is [ksh(1](https://man.openbsd.org/ksh).
+Note: This is very specific to [OpenBSD](https://openbsd.org). Porting this to another platform should only be attempted if [pf(4)](https://man.openbsd.org/pf) is used on that platform. The basic concepts might work with other local firewalls though. Also remember that the default shell on [OpenBSD](https://openbsd.org) is [ksh(1)](https://man.openbsd.org/ksh).
 
 This has been used and tested on [OpenBSD 6.9](https://openbsd.org/69.html) and [OpenBSD 7.0](https://openbsd.org/70.html).
 
