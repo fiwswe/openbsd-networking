@@ -1,0 +1,105 @@
+#!/bin/sh
+#	Copyright (c)2021-2022 by fiwswe
+#
+#	Will be executed when the IPv6 prefix changes for interface em0.
+#	See ipv6PrefixCheck.sh for the base logic of the caller.
+#
+#	Defined variables:
+#		interface	The name of the interface ('em0').
+#		newPrefix	The new IPv6 address prefix.
+#		lastPrefix	The old IPv6 address prefix.
+#
+#	Available functions:
+#		printDebug
+#		printMessage
+#		buildIPv6Addr
+#
+#	Note: The actual action content is a bit muddled as I have only actively implemented
+#	and tested what I needed. Take it with a grain of salt.
+#
+
+#	Adjust this to the expected interface name.
+#	(Could possibly be automated based on the name of this file? But I could not figure
+#	out how to access that name in the context of the included script.)
+local MY_IF='em0'
+
+
+#	Abort if not called from the correct context:
+#	Note: This will also abort the calling script!
+[ "$interface" != "$MY_IF" -o "$0" != 'prefixChanged' ] && exit 1
+
+
+#printDebug "Test: ${interface}, [${newPrefix}], [${lastPrefix}]"
+
+
+#	Figure out the current IPv6 address of the interface:
+local curAddr=`ifconfig "$interface"|grep -E "inet6.+${newPrefix}"|grep -vE '( fe80:| fd|temporary|decrecated)'|head -1|awk '{print $2}'`
+
+#	It might be a good idea to check whether we have found an address before proceeding.
+#	Something like this might work (untested):
+if [ -n "$curAddr" ];then
+	#	Do the actions here.
+fi
+
+
+#	Update DDNS:
+#	In this case I am using the dynv6.com SSH API with SSH configured to connect using the
+#	"dynv6" name without needing a password. Setting this up is left as an excersize for
+#	the reader.
+local hName='myhost'
+local dName='account.dynv6.net'
+ssh dynv6 'hosts' "$dName" 'records' 'set' "$hName" 'aaaa' 'addr' "$curAddr"
+printMessage "Updated ${hName}.${dName} AAAA to ${curAddr}"
+
+#	Update a second hostname at dynv6.com:
+local hName='myotherhost'
+ssh dynv6 'hosts' "$dName" 'records' 'set' "$hName" 'aaaa' 'addr' "$curAddr"
+printMessage "Updated ${hName}.${dName} AAAA to ${curAddr}"
+
+#	Updating other DDNS services should be fairly easy to do. Most offer either a HTTP 
+#	URL based update mechanism or an API of some kind.
+
+
+#	Log some data about the interface (basically the output of ifconfig):
+/root/bin/if_log.sh "$interface"
+#	Note: The script if_log.sh is not provided. But it is fairly trivial.
+
+
+#
+#	Here are some more ideas for actions:
+#
+
+#if [ -n "$newPrefix" ]; then
+#
+#	#	Update DDNS:
+#	#	============
+##	ssh dynv6 'hosts' 'fi-works.dynv6.net' 'records' 'set' 'mfo5test' 'aaaa' 'addr' "$curAddr"
+#
+#	#	Update pf(4) table:
+#	#	===================
+#	#	Updating a table using pfctl(8) is much better than modifying /etc/pf.conf and
+#	#	restarting pf(4).
+#	
+#	#	Update service configurations and restart services where necessary:
+#	#	====================================================================
+#	#	To make this easier use include files in the service configuration where possible
+#	#	to keep the definitions of macros for the IPs.
+#	#	E.g. httpd(8) allows included files and macros.
+#	#	sed(1) can probably be used to exchange old and new IPs.
+#	#	Don't forget to reload the service after making the change. E.g.:
+#	#	rcctl reload httpd
+#fi
+#
+#if [ -n "$lastPrefix" ]; then
+#	#	We need to figure out what he old IPv6 address was. Left as an exercise for the
+#	#	reader. It probably helps that the interface identifier should not change for
+#	#	various reasons.
+#	local oldAddr=…
+
+#	#	Next do something to deactivate the old rules/settings/etc.
+#fi
+
+
+#
+#	EOF.
+#
