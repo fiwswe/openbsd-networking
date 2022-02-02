@@ -1,0 +1,91 @@
+# Copyright (c)2021-2022 by fiwswe
+#
+# Part of the pf(4) watchdog mechanism. Include this file in all scripts using this
+# mechanism.
+#
+
+#	This wile signals the arming of the mechanism and its modified date is used to
+#	determine when to trigger the watchdog:
+WATCHDOG_FILE='/root/.watchdog'
+#	This file contains info on what to do if the watchdog is triggered.
+#	Vaild contents is:
+#		reboot
+#		boot-pf
+WATCHDOG_ACTION='/root/.watchdog-action'
+WATCHDOG_ACTION_REBOOT='reboot'
+WATCHDOG_ACTION_BOOTPF='boot-pf'
+
+#	The minimum time in seconds before the watchdog is triggered. The actual trigger time
+#	also depends on when the watchdog_pf.sh script is next run (generally once per minute
+#	using a crontab(5) entry).
+TRIGGER_SECS=300
+
+
+#	Internals:
+
+#	The default pf(4) boot configuration. This will also be used as a fallback for when
+#	the watchdog needs to restore a usable pf(4) configuration.
+BOOT_PF_CONFIG='/etc/pf.conf'
+
+#	Used to mark log entries written by the log mechanism.
+LOG_TAG='WATCHDOG'
+
+LOGGER_CMD='/usr/bin/logger'
+TOUCH_CMD='/usr/bin/touch'
+RM_CMD='/bin/rm'
+PFCTL_CMD='/sbin/pfctl'
+ID_CMD='/usr/bin/id'
+GREP_CMD='/usr/bin/grep'
+
+
+function do_debug
+{
+	$LOGGER_CMD -p local0.info -t "$LOG_TAG" "DEBUG: $1"
+}
+
+function do_log
+{
+	$LOGGER_CMD -scp local0.notice -t "$LOG_TAG" "$1"
+}
+
+function do_warning
+{
+	$LOGGER_CMD -p local0.info -t "$LOG_TAG" "WARNING: $1"
+}
+
+
+function arm_watchdog
+{
+	$TOUCH_CMD "$WATCHDOG_FILE"&&do_debug 'armed watchdog'
+}
+
+function disarm_watchdog
+{
+	if [ -f "$WATCHDOG_FILE" ];then
+		$RM_CMD "$WATCHDOG_FILE"&&do_debug 'disarmed watchdog'
+	fi
+}
+
+function reset_watchdog
+{
+	if [ -f "$WATCHDOG_FILE" ];then
+		$TOUCH_CMD "$WATCHDOG_FILE"&&do_debug 'reset watchdog'
+	else
+		do_warning 'Can not reset watchdog! Watchdog was not armed'
+	fi
+}
+
+function load_pf_boot_config
+{
+	# Load the pf(4) boot configuration:
+	$PFCTL_CMD -f "$BOOT_PF_CONFIG"
+}
+
+
+#	Local Variables:
+#	tab-width: 4
+#	End:
+
+#
+# EOF.
+#
