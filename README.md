@@ -60,3 +60,14 @@ The router generally blocks traffic from the Internet from reaching the LAN clie
     - Depending on what actions need to be taken when the prefix changes, it may be necessary to know the old and the new prefix, and/or the old and the new IPv6 address.
     - Advertised prefixes and SLAAC take a bit of time to react to changes. E.g. after a reboot it is expected that it will take a few seconds for the IPv6 addresses to become available and stable. An automated solution must take this into account.
 
+### Implementation
+
+Please note again that this is for [OpenBSD 7.0](https://openbsd.org/70.html). And note that [ksh(1)](https://man.openbsd.org/ksh) is used as the default shell in [OpenBSD](https://openbsd.org).
+
+When porting this to a different operating system the [OpenBSD man pages](https://man.openbsd.org/) may be helpful to figure out what this script is supposed to be doing.
+
+#### Files
+- `/root/bin/ipv6PrefixCheck.sh` the man script run by cron(8).
+- `/root/bin/ipv6PrefixChanged.em0` one for each relevant interface, named accordingly, created manually to deal with actions.
+- `/root/.lastipv6prefix.em0` one for each relevant interface, named accordingly, created automatically.
+- `/var/log/ipv6prefix.log` log file, created automatically.
