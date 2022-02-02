@@ -7,4 +7,4 @@ Disclaimer: I make no claims as to correct function or usability for any purpose
 
 ## Dealing with dynamic IPs in a home/small office setting
 
-See ipv6PrefixCheck
+See [ipv6PrefixCheck](ipv6PrefixCheck/README.md)
