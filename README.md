@@ -8,3 +8,7 @@ Disclaimer: I make no claims as to correct function or usability for any purpose
 ## Dealing with dynamic IPs in a home/small office setting
 
 See [ipv6PrefixCheck](ipv6PrefixCheck/README.md)
+
+## Safely testing pf(4) configuration changes on remote hosts
+
+See [pfconftestwatchdog](pfconftestwatchdog/README.md)
