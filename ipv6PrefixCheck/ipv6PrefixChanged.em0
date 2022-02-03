@@ -84,11 +84,10 @@ printMessage "Updated ${hName}.${dName} AAAA to ${curAddr}"
 #	#	See https://desec.readthedocs.io/en/latest/dyndns/update-api.html for details.
 ##	local curIpv4addr="$(getPublicIPv4Address $interface)"
 ##	local deDynSubdomain='<my-dedyn-subdomain>'
-##	local deDynHostname="${deDynSubdomain}.dedyn.io"
-##	local deDynUsername="$deDynHostname"
+##	local deDynUsername="${deDynSubdomain}.dedyn.io"
 ##	local deDynToken='<my-dedyn-authorization-token>'
 ##
-##	curl --url 'https://update.dedyn.io/?hostname='"$deDynHostname"'&myipv4='"$curIpv4addr"'&myipv6='"$curAddr" \
+##	curl --url 'https://update.dedyn.io/?myipv4='"$curIpv4addr"'&myipv6='"$curAddr" \
 ##		--basic --user "${deDynUsername}:${deDynToken}" \
 ##		--silent
 #	#	Note: dedyn.io replies with a status string without a LF. So echo a LF to finish
