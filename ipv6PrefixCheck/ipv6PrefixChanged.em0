@@ -75,6 +75,29 @@ printMessage "Updated ${hName}.${dName} AAAA to ${curAddr}"
 #	#	Update DDNS:
 #	#	============
 ##	ssh dynv6 'hosts' 'account.dynv6.net' 'records' 'set' 'myhost' 'aaaa' 'addr' "$curAddr"
+#	#
+#	#	Alternative 1:
+#	#	Get the public IPv4 address as well and use an URL-based update API such as the
+#	#	dyndns method used in some variation by various DDNS services to update both IPv4
+#	#	and IPv6 address in one go.
+#	#	E.g. the following updates a dedyn.io subdomain with both IPv4 and IPv6 addresses:
+#	#	See https://desec.readthedocs.io/en/latest/dyndns/update-api.html for details.
+##	local curIpv4addr="$(getPublicIPv4Address $interface)"
+##	local deDynSubdomain='<my-dedyn-subdomain>'
+##	local deDynHostname="${deDynSubdomain}.dedyn.io"
+##	local deDynUsername="$deDynHostname"
+##	local deDynToken='<my-dedyn-authorization-token>'
+##
+##	curl --url 'https://update.dedyn.io/?hostname='"$deDynHostname"'&myipv4='"$curIpv4addr"'&myipv6='"$curAddr" \
+##		--basic --user "${deDynUsername}:${deDynToken}" \
+##		--silent
+#	#	Note: dedyn.io replies with a status string without a LF. So echo a LF to finish
+#	#	this: 
+##	echo
+#	#	We could also log the output.
+#
+#	#	Note: Requires curl(8). It may be possible to use the built-in ftp(1) instead but
+#	#	that is left as an exercise for the reader…
 #
 #	#	Update pf(4) table:
 #	#	===================
