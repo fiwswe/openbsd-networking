@@ -73,7 +73,7 @@ printMessage "Updated ${hName}.${dName} AAAA to ${curAddr}"
 #
 #	#	Update DDNS:
 #	#	============
-##	ssh dynv6 'hosts' 'fi-works.dynv6.net' 'records' 'set' 'mfo5test' 'aaaa' 'addr' "$curAddr"
+##	ssh dynv6 'hosts' 'account.dynv6.net' 'records' 'set' 'myhost' 'aaaa' 'addr' "$curAddr"
 #
 #	#	Update pf(4) table:
 #	#	===================
