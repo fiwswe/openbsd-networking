@@ -62,7 +62,7 @@ function delayAfterBoot
 	[ $myUptime -lt 120 ] && exitWithMessage "Still waiting for SLAAC after a reboot ${myUptime} seconds ago."
 }
 
-#	Build a valid IPv6 address given an address prefix and an IID.
+#	Utility function to build a valid IPv6 address given an address prefix and an IID.
 #	Parameters:
 #		prefix	The IPv6 address prefix (without trailing '::/n')
 #				May not contain any '::'!
@@ -92,6 +92,29 @@ function buildIPv6Addr
 	fi
 
 	echo "${prefix}${s}${iid}"
+}
+
+#	Utility function to get the public IPv4 address (of the router) for a given interface.
+#	Parameters:
+#		interface	The interface for which to get the public IPv4 address
+function getPublicIPv4Address
+{
+	local interface="$1"
+
+	#	Note: there are numerous web services on the Internet that echo your current IPv4
+	#	address using HTTP/HTTPS. Choose one you are compforable with.
+	local ip="$(curl --url 'https://checkipv4.dedyn.io/' --silent --interface $interface)"
+
+	#	Note: curl(8) needs to be installed manually (pkg_add curl) on OpenBSD. If you
+	#	don't want to use curl(8) you could use the built-in ftp(1) command. However
+	#	choosing the outgoing interface requires the IP of the interface not the name.
+	#	The following assumes that there is only one IPv4 address configured on the
+	#	interface. If you have more, you may need to modify the code to choose the one
+	#	you want. This code chooses the first one.
+#	local ifip="$(ifconfig $interface|grep 'inet '|cut -d ' ' -f 2|head -1)"
+#	local ip="$(ftp -o '-' -s $ifip 'https://checkipv4.dedyn.io/' 2>/dev/null)"
+
+	echo "$ip"
 }
 
 #	Get the current IPv6 address prefix for a given interface.
