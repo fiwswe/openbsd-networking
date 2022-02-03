@@ -45,7 +45,7 @@ fi
 
 #	Update DDNS:
 #	In this case I am using the dynv6.com SSH API with SSH configured to connect using the
-#	"dynv6" name without needing a password. Setting this up is left as an excersize for
+#	"dynv6" name without needing a password. Setting this up is left as an exercise for
 #	the reader.
 local hName='myhost'
 local dName='account.dynv6.net'
