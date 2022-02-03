@@ -13,6 +13,7 @@
 #		printDebug
 #		printMessage
 #		buildIPv6Addr
+#		getPublicIPv4Address
 #
 #	Note: The actual action content is a bit muddled as I have only actively implemented
 #	and tested what I needed. Take it with a grain of salt.
