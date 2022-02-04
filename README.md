@@ -1,5 +1,5 @@
 # openbsd-networking
-Some random scripts to handle various networking tasks on [OpenBSD](https://openbsd.org).
+Some random scripts to handle various network related tasks on [OpenBSD](https://openbsd.org).
 
 Unless otherwise mentioned the scripts have been developed for and somewhat tested on [OpenBSD 7.0](https://openbsd.org/70.html) stable.
 
