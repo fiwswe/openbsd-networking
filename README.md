@@ -12,3 +12,7 @@ See [ipv6PrefixCheck](ipv6PrefixCheck/README.md)
 ## Safely testing pf(4) configuration changes on remote hosts
 
 See [pfconftestwatchdog](pfconftestwatchdog/README.md)
+
+## ACME certificate renewal utilities
+
+See [acme-cert-renewal](acme-cert-renewal/README.md)
