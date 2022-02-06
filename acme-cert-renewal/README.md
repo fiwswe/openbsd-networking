@@ -7,7 +7,7 @@ While not incorrect this does not solve the problem of getting running services 
 The shell script snippet is meant to be added to or included from `/etc/daily.local`. It reduces the custom code for each certificate to one line which specifies the hostname and the affected services. For example:
 ```
 handleDomain www.example.com 'HTTPD'
-handleDomain mail.example.com 'NO_HTTPD' 'NO_APACHE' 'SMTPD' 'DOVECOT'
+handleDomain mail.example.com 'NO_HTTPD' 'NO_APACHE' 'DOVECOT' 'SMTPD'
 ```
 
 The script snippet will also log what it does to the email sent by the [daily(8)](https://man.openbsd.org/daily) mechanism and to `/var/log/daily.out`.
