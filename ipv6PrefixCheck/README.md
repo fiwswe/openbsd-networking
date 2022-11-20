@@ -60,7 +60,7 @@ Please note again that this is for [OpenBSD 7.0](https://openbsd.org/70.html). A
 When porting this to a different operating system the [OpenBSD man pages](https://man.openbsd.org/) may be helpful to figure out what this script is supposed to be doing.
 
 ### Files
-- `/root/bin/ipv6PrefixCheck.sh` the man script run by cron(8).
+- `/root/bin/ipv6PrefixCheck.sh` the main script run by cron(8).
 - `/root/bin/ipv6PrefixChanged.em0` one for each relevant interface, named accordingly, created manually to deal with actions.
 - `/root/.lastipv6prefix.em0` one for each relevant interface, named accordingly, created automatically.
 - `/var/log/ipv6prefix.log` log file, created automatically.
