@@ -124,17 +124,13 @@ function getIPv6Prefix
 {
 	local interface="$1"
 	
-	#	route -n show -inet6 | grep $interface = List all IPv6 networks.
-	#	grep '::/' = List only network addresses.
-	#	grep -vE '^(fd|fe80)' = Remove ULA and link-local networks.
-	#	awk -F '::/' '{print substr($1,1,19)}' = Shorten to the prefix.
-	#	sort -u = Remove duplicates.
-	#	tail -n 1 = Newer networks are listed at the bottom.
-	#				Last entry therefore is the current IPv6 prefix.
-	local publicIPv6Net=`route -n show -inet6 | grep -E '.+::/[1-9].+ '"$interface" \
-		| grep -vE '^(fd|fe80)' \
-		| awk -F '::/' '{print substr($1,1,19)}' \
-		| sort -u | tail -n 1`
+	local publicIPv6Net=`slaacctl show interface "$interface" \
+		| grep 'prefix:' \
+		| grep -v 'prefix: fd' \
+		| cut -d' ' -f2 \
+		| awk -F'::/' '{print substr($1,1,19)}'`
+	#	Note: There should be only one public IPv6 prefix. So no sort or tail is
+	#		  necessary.
 
 	echo "$publicIPv6Net"
 }
