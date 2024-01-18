@@ -55,7 +55,7 @@ The router generally blocks traffic from the Internet from reaching the LAN clie
 
 ## Implementation
 
-Please note again that this is for [OpenBSD 7.0](https://openbsd.org/70.html). And note that [ksh(1)](https://man.openbsd.org/ksh) is used as the default shell in [OpenBSD](https://openbsd.org).
+Please note again that this is for [OpenBSD 7.0](https://openbsd.org/70.html) and later. And note that [ksh(1)](https://man.openbsd.org/ksh) is used as the default shell in [OpenBSD](https://openbsd.org).
 
 When porting this to a different operating system the [OpenBSD man pages](https://man.openbsd.org/) may be helpful to figure out what this script is supposed to be doing.
 
