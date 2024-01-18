@@ -59,8 +59,17 @@ Please note again that this is for [OpenBSD 7.0](https://openbsd.org/70.html) an
 
 When porting this to a different operating system the [OpenBSD man pages](https://man.openbsd.org/) may be helpful to figure out what this script is supposed to be doing.
 
+## Usage
+* Implement concrete update code for your DDNS provider(s) in the `/root/bin/ipv6PrefixChanged.em0` file.
+* Call the script often using e.g. [cron(8)](https://man.openbsd.org/cron) for user `root` like this:
+```
+*       *       *       *       *       /root/bin/ipv6PrefixCheck.sh
+```
+Note: You may be able to make this slightly more secure by using [doas(1)](https://man.openbsd.org/doas) instead of running directly as `root`. But that is out of scope for this document and has not been tested.
+
+
 ### Files
-- `/root/bin/ipv6PrefixCheck.sh` the main script run by cron(8).
+- `/root/bin/ipv6PrefixCheck.sh` the main script run by [cron(8)](https://man.openbsd.org/cron).
 - `/root/bin/ipv6PrefixChanged.em0` one for each relevant interface, named accordingly, created manually to deal with actions.
 - `/root/.lastipv6prefix.em0` one for each relevant interface, named accordingly, created automatically.
 - `/var/log/ipv6prefix.log` log file, created automatically.
