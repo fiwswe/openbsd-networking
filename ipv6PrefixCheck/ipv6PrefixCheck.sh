@@ -126,7 +126,7 @@ function getIPv6Prefix
 	
 	local publicIPv6Net=`slaacctl show interface "$interface" \
 		| grep 'prefix:' \
-		| grep -v 'prefix: fd' \
+		| egrep -v 'prefix: f(c|d)' \
 		| cut -d' ' -f2 \
 		| awk -F'::/' '{print substr($1,1,19)}'`
 	#	Note: There should be only one public IPv6 prefix. So no sort or tail is
