@@ -1,5 +1,5 @@
 #!/bin/sh
-#	Copyright (c)2021-2022 by fiwswe
+#	Copyright (c)2021-2024 by fiwswe
 #	Based on the script IPv6Aliasses-en.sh by Thomas Bohl
 #	See: https://aloof.de/f/IPv6Aliases-en.sh
 #
