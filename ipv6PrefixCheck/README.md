@@ -1,23 +1,23 @@
 # Dealing with dynamic IPs in a home/small office setting
 
 ## Basic situation
-- A VDSL conection provided by [Deutsche Telekom](https://telekom.de) in Germany with dynamic IPv4 and IPv6 addresses
-  - Other providers are probably very similar
-- An [AVM](https://avm.de) FRITZ!Box as the Router, currently running FRITZ!OS 7.29
-- A LAN with multiple devices
+- A VDSL conection provided by [Deutsche Telekom](https://telekom.de) in Germany with dynamic IPv4 and IPv6 addresses.
+  - Other providers are probably very similar unless they use DS-Lite.
+- An [AVM](https://avm.de) FRITZ!Box as the Router, currently running FRITZ!OS 7.79.
+- A LAN with multiple devices/hosts.
 
 The provider advertises 1 public, dynamic IPv4 address to the router using DHCPv4.
 
-The provider advertises 1 public, dynamic IPv6 address (/64) to the router. In combination with the EUI64 interface identifier of the router WAN interface this forms the public, dynamic IP of the router.
+The provider advertises 1 public, dynamic IPv6 /64 address prefix to the router. In combination with the EUI64 interface identifier (IID) of the router WAN interface this forms the public, dynamic IPv6 address of the router.
 
-The provider additionally advertises 1 public, dynamic IPv6 /56 address prefix to the router. Incoming traffic addressed to IPs from this prefix will be routed to the public, dynamic IP of the router.
+The provider additionally advertises 1 public, dynamic IPv6 /56 address prefix to the router. Incoming traffic addressed to IPs from this prefix will be routed to the public, dynamic IPv6 address of the router.
 
 The router will advertise a /64 subnet of the public, dynamic IPv6 /56 address prefix to the clients on the LAN. They will typically use SLAAC to configure some of their IPv6 addresses based on this prefix.
 
 The router generally blocks traffic from the Internet from reaching the LAN clients. But port forwarding rules can be configured to allow certain traffic to reach specific LAN clients.
-- For IPv4 the combination of the public IPv4 address and a port number and a protocol decide if and where packets are forwarded. (There is also an *exposed host* setting that forwards almost all traffic to the public IPv4 address to one LAN client.)
+- For IPv4 the combination of the public IPv4 address and a port number and a protocol decide if and to where packets are forwarded. (There is also an *exposed host* setting that forwards almost all traffic to the public IPv4 address to one LAN client.)
   - ICMP is a special case.
-- For IPv6 the combination of public IPv6 address prefix, subnet specified by FRITZ!OS and the interface identifier forms the public IPv6 address of the LAN client. This in combination with a port number and a protocol decide if and where packets are forwarded.
+- For IPv6 the combination of public IPv6 address prefix, subnet specified by FRITZ!OS and the interface identifier forms the public IPv6 address of the LAN client. This in combination with a port number and a protocol decide if and to where packets are forwarded.
   - IPv6 forwarding rules hinge on the 64 bit interface identifier of the LAN client. If that IID changes the rule must be adjusted (manually).
   - ICMPv6 is a special case.
   - For the normal LAN the subnet specified by FRITZ!OS is `00`. (For the guest LAN it would be `01`.)
@@ -37,7 +37,7 @@ The router generally blocks traffic from the Internet from reaching the LAN clie
 
 ## Issues when trying to have services on LAN clients that are reachable from the Internet
 - All the public IPs are dynamic. They *will* change occasionally.
-  - Note: At the time of writing Telekom does not force a change very often. Probably every few weeks to months. However there does not seem to be a fixed schedule so preparations need to be made to handle changes at any time.
+  - Note: At the time of writing Deutsche Telekom does not force a change very often. Probably every few weeks to months. However there does not seem to be a fixed schedule so preparations need to be made to handle changes at any time.
 
 1. DNS records may need to be updated after a change.
     - For the public IPv4 address and for the public IPv6 address *of the router* the DDNS client in FRITZ!OS can handle this. Note though that the public IPv6 address *of the router* has little practical value unless you want to reach the FRITZ!Box itself.
@@ -52,15 +52,17 @@ The router generally blocks traffic from the Internet from reaching the LAN clie
     - There is no trigger mechanism so polling must be used.
     - Depending on what actions need to be taken when the prefix changes, it may be necessary to know the old and the new prefix, and/or the old and the new IPv6 address.
     - Advertised prefixes and SLAAC take a bit of time to react to changes. E.g. after a reboot it is expected that it will take a few seconds for the IPv6 addresses to become available and stable. An automated solution must take this into account.
+    - In situations where multiple routers send Router Advertisements (RAs), additional steps are required to choose the actions depending on the router (the uplink) that sent the RA. This use case is not dealt with in this project.
 
 ## Implementation
 
-Please note again that this is for [OpenBSD 7.0](https://openbsd.org/70.html) and later. And note that [ksh(1)](https://man.openbsd.org/ksh) is used as the default shell in [OpenBSD](https://openbsd.org).
+Please note again that this is for [OpenBSD 7.0](https://openbsd.org/70.html) and later including [OpenBSD 7.5](https://openbsd.org/75.html). And note that [ksh(1)](https://man.openbsd.org/ksh) is used as the default shell in [OpenBSD](https://openbsd.org).
 
 When porting this to a different operating system the [OpenBSD man pages](https://man.openbsd.org/) may be helpful to figure out what this script is supposed to be doing.
 
 ## Usage
 * Implement concrete update code for your DDNS provider(s) in the `/root/bin/ipv6PrefixChanged.em0` file.
+  * Name the extension of the file (`em0` in this example) based on your egress interface.
 * Call the script often using e.g. [cron(8)](https://man.openbsd.org/cron) for user `root` like this:
 ```
 *       *       *       *       *       /root/bin/ipv6PrefixCheck.sh
