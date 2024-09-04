@@ -34,7 +34,7 @@ local MY_IF='em0'
 
 
 #	Figure out the current IPv6 address of the interface:
-local curAddr=`ifconfig "$interface"|grep -E "inet6.+${newPrefix}"|grep -vE '( fe80:| fd|temporary|decrecated)'|head -1|awk '{print $2}'`
+local curAddr=`ifconfig "$interface"|egrep "inet6.+${newPrefix}"|head -1|awk '{print $2}'`
 
 #	It might be a good idea to check whether we have found an address before proceeding.
 #	Something like this might work (untested):
