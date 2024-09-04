@@ -38,8 +38,9 @@ local curAddr=`ifconfig "$interface"|egrep "inet6.+${newPrefix}"|head -1|awk '{p
 
 #	It might be a good idea to check whether we have found an address before proceeding.
 #	Something like this might work (untested):
-if [ -n "$curAddr" ];then
-	#	Do the actions here.
+if [ ! -n "$curAddr" ];then
+	printMessage "ERROR: No public IPv6 address with prefix ${newPrefix} found for interface ${interface}!"
+	exit 1
 fi
 
 
