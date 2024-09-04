@@ -1,5 +1,5 @@
 #!/bin/sh
-#	Copyright (c)2021-2022 by fiwswe
+#	Copyright (c)2021-2024 by fiwswe
 #
 #	Will be executed when the IPv6 prefix changes for interface em0.
 #	See ipv6PrefixCheck.sh for the base logic of the caller.
